@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <script>
+    $.get(apiUrl, function (data) {
+      let imgUrl = data.image_url
+      // 画像を表示する部分だ
+    });
+
+    // ユーザーが子猫をクリックししたときの処理だ：
+    $(".kittyImage").click(function(e) {
+      // コントラクトの`feedOnKitty` メソッドを呼び出す
+      ZombieFeeding.feedOnKitty(zombieId, kittyId)
+    })
+
+    </script>
+  </body>
+</html>
