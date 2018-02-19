@@ -157,23 +157,20 @@ var ABI = [
 var ZombieFactoryContract = web3.eth.contract(ABI)
 var contractFactoryAddress = "0xf45345de5d10ed56a562b997c095b16383071d1c";
 var ZombieFactory = ZombieFactoryContract.at(contractFactoryAddress);
-// `ZombieFactory`はコントラクトのpublic関数とイベントにアクセスできるようになったぞ。
-
-
-
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: ' Zombie Generate' });
+  res.render('index', { title: 'Zombie Generate' });
 });
 
 router.post('/post', function (req, res) {
   var name = req.body.params;
   var dna = ZombieFactory.createRandomZombie(name);
-  // `NewZombie`イベントをリッスンしてUIを更新する部分だ
+  console.log(dna);
   res.send([name,dna]);
 });
+
+
 
 
 module.exports = router;

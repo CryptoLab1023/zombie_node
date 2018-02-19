@@ -6,3 +6,8 @@ body {
 a {
   color: #00B7FF;
 }
+
+#kitty {
+  height: 100px;
+  width: 100px;
+}

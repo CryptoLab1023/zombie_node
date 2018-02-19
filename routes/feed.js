@@ -156,8 +156,8 @@ var ABI = [
 var ZombieFactoryContract = web3.eth.contract(ABI)
 var contractFactoryAddress = "0xf45345de5d10ed56a562b997c095b16383071d1c";
 var ZombieFactory = ZombieFactoryContract.at(contractFactoryAddress);
-// `ZombieFactory`はコントラクトのpublic関数とイベントにアクセスできるようになったぞ。
 
+// `ZombieFactory`はコントラクトのpublic関数とイベントにアクセスできるようになったぞ。
 var abi = [
 	{
 		"constant": true,
@@ -345,33 +345,30 @@ var abi = [
 		"type": "function"
 	}
 ]
+
 var ZombieFeedingContract = web3.eth.contract(abi);
-var contractFeedingAddress = "0x0b622341b8329c00247738856602eaa19c6bc651";
+var contractFeedingAddress = "0x692a70d2e424a56d2c6c27aa97d1a86395877b3a";
 var ZombieFeeding = ZombieFeedingContract.at(contractFeedingAddress);
 
-// ゾンビのIDと捕食したい子猫のIDをすでに持っているものとする。
-let zombieId = 1;
-let kittyId = 1;
 
-// クリプトキティの画像を取得するにはweb APIに照会する必要がある。
-// この情報はブロックチェーンにはない。ウェブサーバーにあるだけだ。
-// もし全ての情報がブロックチェーン上に格納されていれば、サーバーの
-// 障害を心配することはなくなるがな。まぁこのゾンビゲームを気に入ってもらえなければ、
-// APIを変更するか我々のアクセスをブロックするだけだ。問題ない ;)
-let apiUrl = "https://api.cryptokitties.co/kitties/" + kittyId
 
-// コントラクトのNewZombieイベントをリッスンして表示できるようにする部分だ：
-ZombieFactory.NewZombie(function(error, result) {
-  if (error) return
-  // この関数はレッスン1でやったのと同じようにゾンビを表示するものだ：
-  generateZombie(result.zombieId, result.name, result.dna)
-})
+router.post('/feeding', function (req, res) {
+	var name = req.body.params[0];
+	var dna = ZombieFeeding.feedOnKitty(req.body.params[1], req.body.params[2])
+	res.send([name + "_kitty", dna]);
+});
 
+router.post('/post', function (req, res) {
+  var name = req.body.params;
+  var dna = ZombieFactory.createRandomZombie(name);
+  console.log(dna);
+  res.send([name,dna]);
+});
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Feeding human' });
+  res.render('feed', { title: 'Feeding human' });
 });
 
 module.exports = router;
