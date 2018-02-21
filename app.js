@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var feed = require('./routes/feed');
+var battle = require('./routes/battle');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/feed', feed);
+app.use('/battle', battle);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,5 +49,6 @@ app.use(function(err, req, res, next) {
 
 app.get('/', function (req, res) { res.render('index') })
 app.get('/feed', function (req, res) { res.render('feed') });
+app.get('/battle', function (req, res) { res.render('battle') });
 
 module.exports = app;

@@ -17,8 +17,6 @@ web3.setProvider(provider);
 web3.eth.defaultAccount = web3.eth.accounts[0];
 var coinbase = web3.eth.coinbase;
 var balance = web3.eth.getBalance(coinbase);
-console.log(balance);
-console.log(web3.eth.defaultAccount);
 
 // これがコントラクトにアクセスする方法だ：
 var ABI = [
@@ -153,7 +151,8 @@ var ABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ]
+]
+
 var ZombieFactoryContract = web3.eth.contract(ABI)
 var contractFactoryAddress = "0xf45345de5d10ed56a562b997c095b16383071d1c";
 var ZombieFactory = ZombieFactoryContract.at(contractFactoryAddress);
