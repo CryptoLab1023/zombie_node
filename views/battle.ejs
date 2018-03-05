@@ -8,29 +8,82 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <input type="text" id="defaultAccount" value="0x97998136f3451ca5b0421e42e55cf9100e422fe8"/>
     <!-- kittys表示 -->
-    <input type="text" id="nameInput1" name="" data-target="1" />
-    <p>zombie1 : </p><div id="zombieDna1"></div>
 
+    <p>zombie_1 : </p><div id="zombieDna1"></div>
+    <input type="text" id="nameInput1" name="" data-target="1" />
+    <p>zombie_2 : </p><div id="zombieDna2"></div>
     <input type="text" id="nameInput2" name="" data-target="2" />
-    <p>zombie2 : </p><div id="zombieDna2"></div>
 
     <p>BATTLE zombie1 vs zombie2</p>
     <div id="battleResult"></div>
     <input type="button" id="battleButton" value="battle start" />
 
+    <div id="myZombies"></div>
+    <div id="zombieAll"></div>
 
     <script>
+
+    // ページ更新時に自分のゾンビを表示する
+    function getZombiebyOwner(){
+      var defaultAccount = $("#defaultAccount").val();
+      var JSONdata = createJSONdata("listUpZombies", defaultAccount);
+      console.log(JSONdata);
+      executeJsonRpc('battle/load', JSONdata)
+      .done(
+        function(data){
+          console.log(data)
+          var zombieLists = "";
+          for ( i=0;i<data.length;i++ ) {
+             zombieLists = zombieLists + "<div class='zombieList' id=" + i + ">" + data[i] + "</div>";
+          }
+          $('#myZombies').html(zombieLists);
+        }
+      ).fail(
+        function(data){
+          console.log(data.error);
+        }
+      )
+    }
+
+    // ページ更新時に自分のゾンビを表示する
+    function getAllZombies(){
+      var defaultAccount = $("#defaultAccount").val();
+      var JSONdata = createJSONdata("listUpAllZombies", defaultAccount);
+      console.log(JSONdata);
+      executeJsonRpc('battle/getallzombie', JSONdata)
+      .done(
+        function(data){
+          console.log(data);
+          var zombieLists = "";
+          for ( i=0;i<data.length;i++ ) {
+              zombieLists = zombieLists + "<div class='zombieList' id=" + i + ">" + data[i] + "</div>";
+          }
+          $('#zombieAll').html(zombieLists);
+        }
+      ).fail(
+        function(data){
+          console.log(data);
+          console.log(data.err);
+        }
+      )
+    }
+
+    window.onload = getZombiebyOwner();
+    window.onload = getAllZombies();
+
     // 入力テキストを取得する類のイベントのリスナーだ：
     $("#nameInput1").on('change', function createId() {
+          var defaultAccount = $("#defaultAccount").val();
           var name = $(this).val();
-          var JSONdata = createJSONdata('zombieGenerate1', name);
-          executeJsonRpc('post', JSONdata)
+          var JSONdata = createJSONdata('zombieGenerate1', [defaultAccount, name]);
+          executeJsonRpc('battle/post', JSONdata)
           .done(
             function(data){
                 console.log(data)
-                $("#zombieDna1").html(data[1]);
-                generateZombie(data[0], data[1]);
+                $("#zombieDna1").html(data);
+                generateZombie(name, data);
             }
           ).fail(
             function(data){
@@ -41,31 +94,33 @@
       }
     );
 
-        $("#nameInput2").on('change', function createId() {
-            var name = $(this).val();
-            var JSONdata = createJSONdata('zombieGenerate2', name);
-            executeJsonRpc('post', JSONdata)
-            .done(
-            function(data){
-                console.log(data)
-                $("#zombieDna2").html(data[1]);
-                generateZombie(data[0], data[1]);
-            }
-            ).fail(
-            function(data){
-                console.log(data);
-                $("#zombieDna2").html(data);
-            }
-        );
+    $("#nameInput2").on('change', function createId() {
+        var defaultAccount = $("#defaultAccount").val();
+        var name = $(this).val();
+        var JSONdata = createJSONdata('zombieGenerate2', [ defaultAccount, name ]);
+        executeJsonRpc('/battle/post', JSONdata)
+        .done(
+        function(data){
+            console.log(data)
+            $("#zombieDna2").html(data[1]);
+            generateZombie(data[0], data[1]);
         }
-    );
+        ).fail(
+        function(data){
+            console.log(data);
+            $("#zombieDna2").html(data);
+        });
+    });
 
     // ユーザーが子猫をクリックししたときの処理だ：
     $("#battleButton").on("click", function(e) {
+      getZombiebyOwner();
+      getAllZombies();
+      var defaultAccount = $("#defaultAccount").val();
       // ゾンビのIDと捕食したい子猫のIDをすでに持っているものとする。
       var zombieId1 = $("#nameInput1").attr("data-target");
       var zombieId2 = $("#nameInput2").attr("data-target");
-      var JSONdata = createJSONdata('zombieBattle', [zombieId1, zombieId2]);
+      var JSONdata = createJSONdata('zombieBattle', [defaultAccount, zombieId1, zombieId2]);
       console.log(zombieId1);
       console.log(zombieId2);
       executeJsonRpc('battle/battling', JSONdata)

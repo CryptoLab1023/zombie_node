@@ -169,6 +169,13 @@ router.post('/post', function (req, res) {
   res.send([name,dna]);
 });
 
+// 動かない
+// router.post('/load', function (req, res) {
+//   var zombieLists = ZombieFactory.zombies[1];
+//   console.log(zombieLists);
+//   res.send([zombieLists, 'success']);
+// });
+
 
 
 

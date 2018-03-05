@@ -8,10 +8,32 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
     <input type="text" id="nameInput" name="" />
+
     <div id="zombieId"></div>
+    <div id="zombieAll"></div>
 
     <script>
+    // 動かなかった
+    // window.onload = function(){
+    //   var JSONdata = createJSONdata('', '');
+    //   executeJsonRpc('load', JSONdata)
+    //   .done(
+    //     function(data){
+    //       console.log(data)
+    //       var zombieLists = "";
+    //       for ( i=0;i<data.length;i++ ) {
+    //          zombieLists = zombieLists + "<div class='zombieList' id=" + i + ">" + data[i][0] + "</div>";
+    //       }
+    //       $('#zombieAll').append(zombieLists);
+    //     }
+    //   ).fail(
+    //     function(data){
+    //       console.log(data.err);
+    //     }
+    //   )
+    // }
 
     // 入力テキストを取得する類のイベントのリスナーだ：
     $("#nameInput").on('change', function createId() {
